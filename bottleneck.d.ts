@@ -1,4 +1,4 @@
-declare module "bottleneck" {
+declare module "@railzai/bottleneck" {
     namespace Bottleneck {
     type ConstructorOptions = {
         /**
