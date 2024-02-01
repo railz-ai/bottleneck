@@ -81,6 +81,11 @@ class RedisDatastore
         return resolve replies
       @connection.__scriptFn__(name) arr...
     .catch (e) =>
+      console.error('Bottleneck error.message -> ',e.message, JSON.stringify({
+        message:e.message,
+        match1:e.message.match(/^(.*\s)?SETTINGS_KEY_NOT_FOUND$/)
+        match2:e.message.match(/^(.*\s)?UNKNOWN_CLIENT$/)
+      }))
       if (e.message.match(/^(.*\s)?SETTINGS_KEY_NOT_FOUND$/) != null)
         if name == "heartbeat" then @Promise.resolve()
         else
@@ -89,7 +94,9 @@ class RedisDatastore
       else if (e.message.match(/^(.*\s)?UNKNOWN_CLIENT$/) != null)
         @runScript("register_client", [@instance.queued()])
         .then => @runScript(name, args)
-      else @Promise.reject e
+      else 
+        console.error('Bottleneck error -> ', e)
+        @Promise.reject e
 
   prepareArray: (arr) -> (if x? then x.toString() else "") for x in arr
 

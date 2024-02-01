@@ -3326,6 +3326,12 @@
 	                  });
 	                  return _this3.connection.__scriptFn__(name).apply(void 0, _toConsumableArray(arr));
 	                })["catch"](function (e) {
+	                  console.error('Bottleneck error.message -> ', e.message, JSON.stringify({
+	                    message: e.message,
+	                    match1: e.message.match(/^(.*\s)?SETTINGS_KEY_NOT_FOUND$/),
+	                    match2: e.message.match(/^(.*\s)?UNKNOWN_CLIENT$/)
+	                  }));
+
 	                  if (e.message.match(/^(.*\s)?SETTINGS_KEY_NOT_FOUND$/) !== null) {
 	                    if (name === "heartbeat") {
 	                      return _this3.Promise.resolve();
@@ -3339,6 +3345,7 @@
 	                      return _this3.runScript(name, args);
 	                    });
 	                  } else {
+	                    console.error('Bottleneck error -> ', e);
 	                    return _this3.Promise.reject(e);
 	                  }
 	                }));
@@ -3900,7 +3907,7 @@
 
 	var Sync_1 = Sync;
 
-	var version = "2.19.7";
+	var version = "2.19.7-beta.2";
 	var version$1 = {
 		version: version
 	};
